@@ -6,6 +6,9 @@ import { prisma } from "@/lib/prisma";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
+  // Render (like most non-Vercel hosts) sits behind a proxy, so Auth.js's
+  // host-header trust check needs to be explicitly opted into.
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {
