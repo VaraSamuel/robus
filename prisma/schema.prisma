@@ -1,0 +1,112 @@
+// Robus Ops — internal delivery tooling for Zach's actual consulting business.
+// Not client-facing. This runs Robus, not a Robus client.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  OWNER
+  PARTNER
+}
+
+enum Vertical {
+  CPA
+  LAW
+  REAL_ESTATE
+  RESTAURANT
+  NAIL_SALON
+  ARCHITECTURE
+  HOSPITALITY
+  OTHER
+}
+
+enum EngagementStage {
+  ASSESSMENT
+  SPRINT
+  RETAINER
+  COMPLETE
+}
+
+enum CapabilityTag {
+  INTAKE_AUTOMATION
+  RESERVATION_NOSHOW_HANDLING
+  SALES_RECONCILIATION
+  MISSED_CALL_HANDLING
+  REBOOKING_FOLLOWUP
+  DOCUMENT_AUTOMATION
+  CASE_MATTER_TRACKING
+  CLIENT_REPORTING
+  LEASING_AGENT_AUTOMATION
+  BOOKKEEPING_CATEGORIZATION
+  PROPOSAL_BID_ASSEMBLY
+  SHUTTLE_TRANSPORT_COORDINATION
+  GROUP_EVENT_SALES_INQUIRY
+  REVIEW_REPUTATION_MANAGEMENT
+}
+
+enum WorkflowStatus {
+  IDENTIFIED
+  IN_SPRINT
+  SHIPPED
+}
+
+model User {
+  id           String @id @default(cuid())
+  email        String @unique
+  passwordHash String
+  name         String
+  role         Role   @default(PARTNER)
+}
+
+model RobusClient {
+  id        String          @id @default(cuid())
+  name      String
+  vertical  Vertical
+  stage     EngagementStage @default(ASSESSMENT)
+  createdAt DateTime        @default(now())
+
+  workflows       Workflow[]
+  assessmentNotes AssessmentNote[]
+}
+
+model AssessmentNote {
+  id        String      @id @default(cuid())
+  clientId  String
+  client    RobusClient @relation(fields: [clientId], references: [id])
+  rawText   String
+  createdAt DateTime    @default(now())
+}
+
+model Workflow {
+  id                       String         @id @default(cuid())
+  clientId                 String
+  client                   RobusClient    @relation(fields: [clientId], references: [id])
+  capabilityTag            CapabilityTag
+  name                     String
+  frequencyScore           Int
+  timeBurdenScore          Int
+  errorRiskScore           Int
+  automationReadinessScore Int
+  status                   WorkflowStatus @default(IDENTIFIED)
+  sourceNotes              String?
+  createdAt                DateTime       @default(now())
+
+  @@index([capabilityTag])
+  @@index([clientId])
+}
+
+model Playbook {
+  id                    String        @id @default(cuid())
+  capabilityTag         CapabilityTag @unique
+  title                 String
+  commonTools           String
+  steps                 String
+  estimatedHoursWithout Float
+  estimatedHoursWith    Float
+}
