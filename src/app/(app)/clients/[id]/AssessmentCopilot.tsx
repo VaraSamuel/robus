@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { analyzeNotesAction, addWorkflow } from "@/lib/actions";
+import { useSpeechToText } from "@/lib/useSpeechToText";
 import {
   CAPABILITY_LABELS,
   priorityScore,
@@ -25,6 +26,10 @@ export function AssessmentCopilot({
 
   const alreadyTracked = new Set(existingCapabilityTags);
 
+  const { isRecording, interimText, isSupported, start, stop } = useSpeechToText((finalText) => {
+    setNotes((prev) => (prev ? prev.trim() + " " : "") + finalText);
+  });
+
   const handleAnalyze = () => {
     startTransition(async () => {
       const results = await analyzeNotesAction(clientId, notes);
@@ -43,10 +48,26 @@ export function AssessmentCopilot({
 
   return (
     <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5">
-      <h2 className="text-sm font-semibold text-neutral-900 mb-1">Assessment Copilot</h2>
+      <div className="flex items-start justify-between gap-3 mb-1">
+        <h2 className="text-sm font-semibold text-neutral-900">Assessment Copilot</h2>
+        {isSupported && (
+          <button
+            type="button"
+            onClick={isRecording ? stop : start}
+            className={`shrink-0 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition ${
+              isRecording
+                ? "bg-red-50 text-red-700 hover:bg-red-100"
+                : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+            }`}
+          >
+            <span className={`w-2 h-2 rounded-full ${isRecording ? "bg-red-500 animate-pulse" : "bg-indigo-500"}`} />
+            {isRecording ? "Stop recording" : "Record notes"}
+          </button>
+        )}
+      </div>
       <p className="text-xs text-neutral-500 mb-4">
-        Paste raw interview notes from the Assessment. The copilot flags candidate workflows and drafts scores —
-        review and add the ones that are real before they become part of the record.
+        Paste raw interview notes from the Assessment, or record them live. The copilot flags candidate workflows
+        and drafts scores — review and add the ones that are real before they become part of the record.
       </p>
 
       <textarea
@@ -56,6 +77,16 @@ export function AssessmentCopilot({
         placeholder="e.g. The front desk gets constantly interrupted by missed calls during busy hours. Reservations and no-shows are tracked in a spreadsheet — deposits aren't collected consistently, so no-shows are a real revenue leak. Daily sales reconciliation between the POS and QuickBooks is manual and takes about an hour every night..."
         className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-300"
       />
+      {isRecording && (
+        <p className="text-xs text-neutral-400 italic mt-1.5">
+          Listening… {interimText && <span className="text-neutral-600">&ldquo;{interimText}&rdquo;</span>}
+        </p>
+      )}
+      {!isSupported && (
+        <p className="text-xs text-neutral-400 mt-1.5">
+          Voice input isn&apos;t supported in this browser — try Chrome or Edge.
+        </p>
+      )}
 
       <button
         onClick={handleAnalyze}
