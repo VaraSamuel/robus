@@ -26,7 +26,7 @@ export function AssessmentCopilot({
 
   const alreadyTracked = new Set(existingCapabilityTags);
 
-  const { isRecording, interimText, isSupported, start, stop } = useSpeechToText((finalText) => {
+  const { isRecording, interimText, isSupported, errorMessage, start, stop } = useSpeechToText((finalText) => {
     setNotes((prev) => (prev ? prev.trim() + " " : "") + finalText);
   });
 
@@ -87,6 +87,7 @@ export function AssessmentCopilot({
           Voice input isn&apos;t supported in this browser — try Chrome or Edge.
         </p>
       )}
+      {errorMessage && <p className="text-xs text-red-600 mt-1.5">{errorMessage}</p>}
 
       <button
         onClick={handleAnalyze}
