@@ -1,15 +1,38 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { updateWorkflowStatus } from "@/lib/actions";
-import { CAPABILITY_LABELS, priorityScore, isPriorityOne, tailoredDeepDiveQuestions } from "@/lib/capabilities";
+import { CAPABILITY_LABELS, tailoredDeepDiveQuestions } from "@/lib/capabilities";
+import { compositeScore, finalTier, rowStatus, TIER_LABELS } from "@/lib/scoring";
 import { VERTICAL_LABELS } from "@/lib/verticals";
 import { AssessmentCopilot } from "./AssessmentCopilot";
 import { StageSelector } from "./StageSelector";
+import { CompliantToolSelect, ScoringDetailsForm } from "./WorkflowScoringControls";
 
 const STATUS_STYLES: Record<string, string> = {
   IDENTIFIED: "bg-sky-50 text-sky-700",
   IN_SPRINT: "bg-amber-50 text-amber-700",
   SHIPPED: "bg-emerald-50 text-emerald-700",
+};
+
+const TIER_BADGE: Record<string, string> = {
+  P1: "bg-red-50 text-red-700",
+  P2: "bg-amber-50 text-amber-700",
+  P3: "bg-neutral-100 text-neutral-600",
+  NOT_RECOMMENDED: "bg-neutral-100 text-neutral-400",
+};
+
+const GATE_BADGE: Record<string, string> = {
+  PASS: "bg-emerald-50 text-emerald-700",
+  DEMOTED: "bg-red-50 text-red-700",
+  PENDING: "bg-amber-50 text-amber-700",
+  NA: "bg-neutral-100 text-neutral-500",
+};
+
+const GATE_LABEL: Record<string, string> = {
+  PASS: "PASS — Priority 1 confirmed",
+  DEMOTED: "Quality gate demoted — no confirmed tool",
+  PENDING: "Tool status not yet confirmed",
+  NA: "Gate not applicable",
 };
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -24,7 +47,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
   const playbookByTag = new Map(playbooks.map((p) => [p.capabilityTag, p]));
 
   const sortedWorkflows = [...client.workflows].sort(
-    (a, b) => priorityScore(b) - priorityScore(a)
+    (a, b) => compositeScore(b) - compositeScore(a)
   );
 
   return (
@@ -56,22 +79,31 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
           )}
           {sortedWorkflows.map((w) => {
             const playbook = playbookByTag.get(w.capabilityTag);
+            const composite = compositeScore(w);
+            const gate = finalTier(w);
+            const status = rowStatus(w);
+            const isDemoted = gate.gateResult === "DEMOTED";
+            const isGatePending = gate.gateResult === "PENDING";
             return (
-              <details key={w.id} className="px-5 py-4">
+              <details
+                key={w.id}
+                className={`px-5 py-4 ${isDemoted ? "bg-red-50/50" : isGatePending ? "bg-amber-50/40" : ""}`}
+              >
                 <summary className="cursor-pointer flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-sm font-medium text-neutral-900">
                         {CAPABILITY_LABELS[w.capabilityTag]}
                       </span>
-                      {isPriorityOne(w) && (
-                        <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-50 text-red-700">
-                          Priority 1
-                        </span>
-                      )}
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${TIER_BADGE[gate.tier ?? "P2"]}`}>
+                        {gate.tier ? TIER_LABELS[gate.tier] : "Pending gate"}
+                      </span>
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${status === "Complete" ? "bg-neutral-100 text-neutral-500" : "bg-amber-50 text-amber-700"}`}>
+                        {status}
+                      </span>
                     </div>
                     <p className="text-xs text-neutral-500 mt-0.5">
-                      Score {priorityScore(w).toFixed(1)} · Frequency {w.frequencyScore} · Time burden {w.timeBurdenScore} · Error risk {w.errorRiskScore} · Automation-ready {w.automationReadinessScore}
+                      Composite {composite}/20 · Frequency {w.frequencyScore} · Time Cost {w.timeBurdenScore} · Error Rate &amp; Risk {w.errorRiskScore} · AI Tool Availability {w.automationReadinessScore}
                     </p>
                   </div>
                   <span className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_STYLES[w.status]}`}>
@@ -83,6 +115,15 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                   {w.sourceNotes && (
                     <p className="text-xs text-neutral-500 italic">Source: &ldquo;{w.sourceNotes}&rdquo;</p>
                   )}
+
+                  <div className="flex items-center justify-between gap-3 flex-wrap">
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${GATE_BADGE[gate.gateResult]}`}>
+                      {GATE_LABEL[gate.gateResult]}
+                    </span>
+                    <CompliantToolSelect workflow={w} />
+                  </div>
+
+                  <ScoringDetailsForm workflow={w} />
 
                   {playbook && (
                     <div className="bg-neutral-50 rounded-lg p-3 text-sm">

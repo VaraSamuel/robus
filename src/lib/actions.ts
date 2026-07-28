@@ -42,6 +42,9 @@ const addWorkflowSchema = z.object({
   sourceNotes: z.string(),
 });
 
+const COMPLIANT_TOOL_STATUSES = ["YES", "NO", "UNANSWERED"] as const;
+const REVENUE_BASES = ["MEASURED", "ESTIMATED", "UNMEASURED"] as const;
+
 export async function createClient(formData: FormData) {
   await requireSession();
   const parsed = createClientSchema.parse({
@@ -109,6 +112,53 @@ export async function updateWorkflowStatus(workflowId: string, status: (typeof S
   const wf = await prisma.workflow.update({ where: { id: workflowId }, data: { status: parsedStatus } });
   revalidatePath(`/clients/${wf.clientId}`);
   revalidatePath("/signal");
+}
+
+// The main post-hoc edit: resolving a PENDING gate row once the compliant-tool
+// question actually gets answered, without touching anything else.
+export async function updateWorkflowCompliantTool(
+  workflowId: string,
+  status: (typeof COMPLIANT_TOOL_STATUSES)[number]
+) {
+  await requireSession();
+  const parsedStatus = z.enum(COMPLIANT_TOOL_STATUSES).parse(status);
+  const wf = await prisma.workflow.update({ where: { id: workflowId }, data: { confirmedCompliantTool: parsedStatus } });
+  revalidatePath(`/clients/${wf.clientId}`);
+}
+
+const scoringDetailsSchema = z.object({
+  rationale: z.string().optional(),
+  creativeAdjacent: z.boolean(),
+  creativeAdjacentNote: z.string().optional(),
+  timeCostHoursPerMonth: z.number().optional(),
+  revenueOpportunity: z.number().optional(),
+  revenueBasis: z.enum(REVENUE_BASES).optional(),
+});
+
+export async function updateWorkflowScoringDetails(workflowId: string, formData: FormData) {
+  await requireSession();
+  const timeCostRaw = formData.get("timeCostHoursPerMonth");
+  const revenueRaw = formData.get("revenueOpportunity");
+  const parsed = scoringDetailsSchema.parse({
+    rationale: formData.get("rationale") || undefined,
+    creativeAdjacent: formData.get("creativeAdjacent") === "on",
+    creativeAdjacentNote: formData.get("creativeAdjacentNote") || undefined,
+    timeCostHoursPerMonth: timeCostRaw ? Number(timeCostRaw) : undefined,
+    revenueOpportunity: revenueRaw ? Number(revenueRaw) : undefined,
+    revenueBasis: formData.get("revenueBasis") || undefined,
+  });
+  const wf = await prisma.workflow.update({
+    where: { id: workflowId },
+    data: {
+      rationale: parsed.rationale ?? null,
+      creativeAdjacent: parsed.creativeAdjacent,
+      creativeAdjacentNote: parsed.creativeAdjacentNote ?? null,
+      timeCostHoursPerMonth: parsed.timeCostHoursPerMonth ?? null,
+      revenueOpportunity: parsed.revenueOpportunity ?? null,
+      revenueBasis: parsed.revenueBasis ?? null,
+    },
+  });
+  revalidatePath(`/clients/${wf.clientId}`);
 }
 
 export async function updateClientStage(clientId: string, stage: (typeof STAGES)[number]) {

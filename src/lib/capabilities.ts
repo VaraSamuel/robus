@@ -105,26 +105,6 @@ export function analyzeNotes(rawText: string): ExtractedWorkflow[] {
   return results;
 }
 
-export function priorityScore(w: {
-  frequencyScore: number;
-  timeBurdenScore: number;
-  errorRiskScore: number;
-  automationReadinessScore: number;
-}): number {
-  // Weighted toward frequency/time-burden (the actual cost), automation
-  // readiness makes an easy win more attractive, error risk is a smaller boost.
-  return (
-    w.frequencyScore * 1.2 +
-    w.timeBurdenScore * 1.2 +
-    w.errorRiskScore * 0.8 +
-    w.automationReadinessScore * 1.0
-  );
-}
-
-export function isPriorityOne(w: Parameters<typeof priorityScore>[0]): boolean {
-  return priorityScore(w) >= 14;
-}
-
 // A capability-specific opening question — this is what makes the question
 // set feel tailored to what THIS client's notes actually surfaced, rather
 // than a generic script every client gets word-for-word.

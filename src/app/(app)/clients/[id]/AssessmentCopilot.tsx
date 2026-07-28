@@ -3,13 +3,8 @@
 import { useState, useTransition } from "react";
 import { analyzeNotesAction, addWorkflow } from "@/lib/actions";
 import { useSpeechToText } from "@/lib/useSpeechToText";
-import {
-  CAPABILITY_LABELS,
-  priorityScore,
-  isPriorityOne,
-  tailoredDeepDiveQuestions,
-  type ExtractedWorkflow,
-} from "@/lib/capabilities";
+import { CAPABILITY_LABELS, tailoredDeepDiveQuestions, type ExtractedWorkflow } from "@/lib/capabilities";
+import { compositeScore, indicatedTier } from "@/lib/scoring";
 
 export function AssessmentCopilot({
   clientId,
@@ -113,16 +108,20 @@ export function AssessmentCopilot({
                 const isAdded = added.has(c.capabilityTag);
                 const isExisting = !isAdded && alreadyTracked.has(c.capabilityTag);
                 const isDone = isAdded || isExisting;
-                const priority = isPriorityOne(c);
+                const composite = compositeScore(c);
+                const tier = indicatedTier(composite);
                 return (
                   <div key={c.capabilityTag} className="border border-neutral-200 rounded-xl p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="text-sm font-medium text-neutral-900">{CAPABILITY_LABELS[c.capabilityTag]}</p>
-                          {priority && (
-                            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-50 text-red-700">
-                              Priority 1
+                          {tier === "P1" && (
+                            <span
+                              className="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-700"
+                              title="Composite indicates Priority 1, but the quality gate needs a confirmed compliant tool before it's final — answer that once it's added as a workflow."
+                            >
+                              Would be Priority 1 — tool not confirmed yet
                             </span>
                           )}
                           {isExisting && (
@@ -134,12 +133,10 @@ export function AssessmentCopilot({
                         <p className="text-xs text-neutral-500 mt-1 italic">&ldquo;{c.sourceNotes}&rdquo;</p>
                         <div className="flex gap-3 mt-2 text-xs text-neutral-500">
                           <span>Frequency {c.frequencyScore}/5</span>
-                          <span>Time burden {c.timeBurdenScore}/5</span>
-                          <span>Error risk {c.errorRiskScore}/5</span>
-                          <span>Automation-ready {c.automationReadinessScore}/5</span>
-                          <span className="font-medium text-neutral-700">
-                            Score {priorityScore(c).toFixed(1)}
-                          </span>
+                          <span>Time Cost {c.timeBurdenScore}/5</span>
+                          <span>Error Rate &amp; Risk {c.errorRiskScore}/5</span>
+                          <span>AI Tool Availability {c.automationReadinessScore}/5</span>
+                          <span className="font-medium text-neutral-700">Composite {composite}/20</span>
                         </div>
                       </div>
                       <button

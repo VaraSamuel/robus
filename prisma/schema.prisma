@@ -56,6 +56,21 @@ enum WorkflowStatus {
   SHIPPED
 }
 
+// AI Opportunity Scoring Matrix v1.0 (Spoke 7A Section 3B) — gate decisions
+// of record dated 28 July 2026. Composite/tier/gate are computed in
+// src/lib/capabilities.ts from raw scores, never stored.
+enum CompliantToolStatus {
+  YES
+  NO
+  UNANSWERED
+}
+
+enum RevenueBasis {
+  MEASURED
+  ESTIMATED
+  UNMEASURED
+}
+
 model User {
   id           String @id @default(cuid())
   email        String @unique
@@ -84,18 +99,25 @@ model AssessmentNote {
 }
 
 model Workflow {
-  id                       String         @id @default(cuid())
+  id                       String              @id @default(cuid())
   clientId                 String
-  client                   RobusClient    @relation(fields: [clientId], references: [id])
+  client                   RobusClient         @relation(fields: [clientId], references: [id])
   capabilityTag            CapabilityTag
   name                     String
   frequencyScore           Int
   timeBurdenScore          Int
   errorRiskScore           Int
-  automationReadinessScore Int
-  status                   WorkflowStatus @default(IDENTIFIED)
+  automationReadinessScore Int // "AI Tool Availability" — compliance is part of this score
+  status                   WorkflowStatus      @default(IDENTIFIED)
   sourceNotes              String?
-  createdAt                DateTime       @default(now())
+  confirmedCompliantTool   CompliantToolStatus @default(UNANSWERED)
+  creativeAdjacent         Boolean             @default(false)
+  creativeAdjacentNote     String?
+  timeCostHoursPerMonth    Float?
+  revenueOpportunity       Float?
+  revenueBasis             RevenueBasis?
+  rationale                String?
+  createdAt                DateTime            @default(now())
 
   @@index([capabilityTag])
   @@index([clientId])
