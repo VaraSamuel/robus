@@ -71,6 +71,95 @@ enum RevenueBasis {
   UNMEASURED
 }
 
+// ── Pre-sales pipeline (Notion CRM Cluster C1 equivalent — Databases 0/0b/1/2/3) ──
+// Never built in Notion; ported here as real schema instead. Composite scores,
+// the qualification decision (Qualified/Nurture/Not qualified), and the
+// discovery-call outcome are always computed from raw inputs — see
+// src/lib/pipeline.ts — never stored, same philosophy as the scoring matrix.
+
+enum RecordType {
+  CLIENT
+  OPPORTUNITY
+}
+
+enum LeadSource {
+  REFERRAL
+  CHAMBER_OR_ASSOCIATION
+  LINKEDIN
+  EMAIL_INBOUND
+  PRIOR_CLIENT
+  WEBSITE
+  OTHER
+}
+
+enum PipelineStatus {
+  INBOUND
+  QUALIFIED
+  NURTURE
+  NOT_QUALIFIED
+  DISCOVERY_HELD
+  PROPOSAL_SENT
+  CONVERTED
+  DEFERRED
+  DECLINED
+}
+
+enum OverlayStatus {
+  FULL_PACK
+  LIGHTWEIGHT
+  DRAFT
+}
+
+enum CheckInType {
+  POST_ASSESSMENT_30_DAY
+  POST_SPRINT_30_DAY
+  TOOL_ADVISORY_60_DAY
+  ANNUAL_POLICY_REVIEW
+  QUARTERLY_REVIEW
+}
+
+enum ScriptVariant {
+  ASSESSMENT
+  TOOL_ADVISORY
+  POLICY
+}
+
+enum RecordedStatus {
+  YES_CONSENT_LOGGED
+  NO_DECLINED
+  NO_REGIME_FLAG
+}
+
+enum BudgetSignal {
+  BUYS_OUTSIDE_SERVICES
+  SOFTWARE_SPEND_ONLY
+  NOT_OBTAINED
+}
+
+enum GateStatus {
+  PASS
+  FAIL
+}
+
+enum ServiceLine {
+  AI_READINESS_ASSESSMENT
+  AUTOMATION_SPRINT
+  TOOL_SELECTION_ADVISORY
+  AI_POLICY_GOVERNANCE_KIT
+  QUARTERLY_REVIEW
+}
+
+// Post-conversion delivery phase — distinct from `stage` (which drives the
+// existing Workflow/scoring delivery model). Populated only once a lead is
+// Converted.
+enum DeliveryStage {
+  KICKOFF
+  DELIVERY
+  HANDOFF
+  FOLLOW_ON
+  CLOSED
+}
+
 model User {
   id           String @id @default(cuid())
   email        String @unique
@@ -86,8 +175,151 @@ model RobusClient {
   stage     EngagementStage @default(ASSESSMENT)
   createdAt DateTime        @default(now())
 
-  workflows       Workflow[]
-  assessmentNotes AssessmentNote[]
+  // Pipeline / CRM fields — pre-conversion sales funnel tracking. Additive to
+  // the existing delivery-stage model above; `stage` still governs delivery,
+  // `pipelineStatus` governs where a lead sits before and around conversion.
+  recordType          RecordType     @default(CLIENT)
+  parentClientId      String?
+  parentClient        RobusClient?   @relation("ClientOpportunities", fields: [parentClientId], references: [id])
+  opportunities       RobusClient[]  @relation("ClientOpportunities")
+  pipelineStatus      PipelineStatus @default(INBOUND)
+  relationshipLead    String?
+  buildLead           String? // internal-only, written at Converted
+  serviceLine         ServiceLine?
+  deliveryStage       DeliveryStage?
+  source              LeadSource     @default(OTHER)
+  referredBy          String?
+  contactName         String?
+  contactEmail        String?
+  contactPhone        String?
+  statusChangedAt     DateTime?
+  followUpDate        DateTime?
+  closeReason         String?
+  engagementValue     Float? // one-time fixed fee — never summed with retainerValue
+  retainerValue       Float? // monthly — never summed with engagementValue
+  sowSignedDate       DateTime?
+  engagementStartDate DateTime?
+  sowLink             String?
+  clientWorkspaceUrl  String?
+
+  workflows               Workflow[]
+  assessmentNotes         AssessmentNote[]
+  qualifications          LeadQualification[]
+  discoveryCalls          DiscoveryCall[]
+  checkIns                CheckIn[]           @relation("CheckInClient")
+  opportunitiesRaisedFrom CheckIn[]           @relation("CheckInOpportunityRaised")
+
+  @@index([pipelineStatus])
+}
+
+model CheckIn {
+  id                  String       @id @default(cuid())
+  clientId            String
+  client              RobusClient  @relation("CheckInClient", fields: [clientId], references: [id])
+  checkInType         CheckInType
+  date                DateTime     @default(now())
+  outcomeNote         String
+  sentimentScore      Int?
+  opportunityRaisedId String?      @unique
+  opportunityRaised   RobusClient? @relation("CheckInOpportunityRaised", fields: [opportunityRaisedId], references: [id])
+
+  @@index([clientId])
+}
+
+model VerticalOverlay {
+  id                     String        @id @default(cuid())
+  vertical               String
+  status                 OverlayStatus // required, no default — must be an explicit choice at creation
+  slotASizeBand          String? // size band + geography nuance, replaces the 5–100 universal default
+  slotBTypicalWorkflows  String? // processes commonly run by hand, in owner's words
+  slotCToolLandscape     String? // load-bearing — what they run, unused automation, addressable tools
+  slotDBuyingStructure   String? // who decides, how they buy, rough deal-size expectation — never a fee
+  slotERegulatoryContext String? // applicable regime and any established tool exclusions
+  extraDisqualifiers     String?
+  sourcePack             String? // filename of the source document this overlay was drawn from
+  lastReviewed           DateTime? @db.Date // date-only, no time — six-month staleness review marker
+
+  qualifications LeadQualification[]
+}
+
+model LeadQualification {
+  id           String      @id @default(cuid())
+  clientId     String
+  client       RobusClient @relation(fields: [clientId], references: [id])
+  prospectName String
+  source       LeadSource
+  dateRun      DateTime    @default(now())
+  runBy        String // role name — "Relationship Lead", never a Build Lead
+
+  // Pass/Fail selection, per the checklist's own field-type note. Null means
+  // unresolved — the honest state when the material genuinely doesn't say —
+  // rather than defaulting to a guessed pass or fail.
+  gateB1 GateStatus? // can you name at least one specific repeated process?
+  gateC1 GateStatus? // is at least one workflow plausibly AI-addressable today?
+  gateD1 GateStatus? // is the approving decision-maker identifiable and reachable?
+  gateE1 GateStatus? // no regulatory context that rules out every compliant tool?
+  gateF4 GateStatus? // is the request on the service ladder (not custom build, not IT support)?
+
+  // One 0/1/2 dropdown per SIGNAL row (A1-A4, B2-B5, C2-C4, D2-D4, E4 — 15
+  // in all), keyed by ref. Section subtotals (Score A-E) and Total are
+  // always computed by summing these — never themselves stored — same
+  // "grey cells calculate" rule as the AI Opportunity Scoring Matrix.
+  itemScores Json @default("{}")
+
+  // Free-text notes, one per ref row (every A-F row a partner can annotate),
+  // keyed the same way as itemScores.
+  itemNotes Json @default("{}")
+
+  regimeFlag        String? // E2 — which regime, if any, applies. "none identified" if none.
+  vendorRequirement String? // E3 — any known vendor requirement (BAA, data residency, confidentiality undertaking)
+
+  verticalOverlayId String?
+  verticalOverlay   VerticalOverlay? @relation(fields: [verticalOverlayId], references: [id])
+
+  overrideApplied   Boolean   @default(false) // buying-readiness override forcing Nurture despite a qualifying total
+  followUpDate      DateTime?
+  declineReason     String?
+  referredTo        String?
+  discoveryBooked   DateTime?
+  checklistComplete Boolean   @default(false)
+
+  discoveryCalls DiscoveryCall[]
+
+  @@index([clientId])
+}
+
+model DiscoveryCall {
+  id                         String            @id @default(cuid())
+  clientId                   String
+  client                     RobusClient       @relation(fields: [clientId], references: [id])
+  leadQualificationId        String
+  leadQualification          LeadQualification @relation(fields: [leadQualificationId], references: [id])
+  prospectName               String
+  scriptVariant              ScriptVariant     @default(ASSESSMENT)
+  callDate                   DateTime          @default(now())
+  runBy                      String
+  recorded                   RecordedStatus    @default(NO_DECLINED)
+  consentCapturedOnRecording Boolean           @default(false)
+
+  namedWorkflows     Int           @default(0) // count of AI-addressable workflows named on the call
+  workflowDetail     String?
+  toolInventory      String?
+  utilisationFinding String?
+  decisionPath       String?
+  trigger            String?
+  budgetSignal       BudgetSignal?
+  budgetSignalDetail String?
+  regimeFlagNew      String? // anything new heard this call; if it contradicts the qualification flag, record both — never overwrite
+  clientLanguage     String? // 3–5 verbatim quoted phrases
+
+  declineReason String?
+  referredTo    String?
+  followUpDate  DateTime?
+  proposalSent  DateTime?
+  openQuestions String?
+
+  @@index([clientId])
+  @@index([leadQualificationId])
 }
 
 model AssessmentNote {
