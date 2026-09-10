@@ -64,7 +64,7 @@ export default async function ClientsPage({
     <div className="p-8 max-w-4xl">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-neutral-900">Clients</h1>
-        <p className="text-sm text-neutral-500 mt-1">Robus's real consulting engagements — Assessment through Retainer</p>
+        <p className="text-sm text-neutral-500 mt-1">Robus's real consulting engagements, from Assessment through Retainer</p>
       </div>
 
       <details className="mb-8 bg-white rounded-2xl border border-neutral-100 shadow-sm open:pb-5">

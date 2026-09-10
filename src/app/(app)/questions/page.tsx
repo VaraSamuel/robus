@@ -7,14 +7,14 @@ const SALES_QUESTIONS = [
 
 const DEEP_DIVE_QUESTIONS = [
   "Walk me through this workflow step by step, from trigger to completion. What starts it? What ends it?",
-  "Where do mistakes happen? What does a mistake cost you — in time and in consequence?",
+  "Where do mistakes happen? What does a mistake cost you, in time and in consequence?",
   "Have you ever tried to improve this? What happened?",
   "Is there a tool that is supposed to handle this but doesn't quite work?",
 ];
 
 const ROLE_QUESTIONS = [
   "Walk me through a typical day. What are the first three things you do when you sit down?",
-  "Which tasks take up the most of your time each week — not the most important, just the most time?",
+  "Which tasks take up the most of your time each week, not the most important, just the most time?",
   "Are there any tasks you dread because they are repetitive, slow, or error-prone?",
 ];
 
@@ -24,20 +24,20 @@ export default function QuestionsPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-neutral-900">Discovery Questions</h1>
         <p className="text-sm text-neutral-500 mt-1">
-          Two different question sets, for two different moments — verbatim from Robus&apos;s own training materials.
+          Two different question sets, for two different moments, verbatim from Robus&apos;s own training materials.
         </p>
       </div>
 
       <div className="bg-indigo-50 border border-indigo-100 rounded-2xl px-5 py-4 text-sm text-indigo-900 mb-8">
         <strong>Use the right one at the right time:</strong> the Sales Call questions are for before a prospect
-        has paid anything — short, informal, meant to surface enough pain to justify booking a paid Assessment.
+        has paid anything: short, informal, meant to surface enough pain to justify booking a paid Assessment.
         The Workflow Interview Guide is the actual paid-Assessment script, run per staff member, 35–45 minutes each.
       </div>
 
       <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-6 mb-6">
-        <h2 className="text-sm font-semibold text-neutral-900 mb-1">1. Sales / Qualifying Call — before they've paid</h2>
+        <h2 className="text-sm font-semibold text-neutral-900 mb-1">1. Sales / Qualifying Call (before they've paid)</h2>
         <p className="text-xs text-neutral-500 mb-4">
-          Source: Partner Training Manual &amp; Partner Key Qualities. Short and informal — the goal is to surface
+          Source: Partner Training Manual &amp; Partner Key Qualities. Short and informal. The goal is to surface
           one or two real pain points, not to run the full Assessment for free.
         </p>
         <ul className="space-y-2">
@@ -54,7 +54,7 @@ export default function QuestionsPage() {
       </div>
 
       <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-6 mb-6">
-        <h2 className="text-sm font-semibold text-neutral-900 mb-1">2. Workflow Interview Guide — the paid Assessment script</h2>
+        <h2 className="text-sm font-semibold text-neutral-900 mb-1">2. Workflow Interview Guide (the paid Assessment script)</h2>
         <p className="text-xs text-neutral-500 mb-4">
           Source: Robus_Template_WorkflowInterviewGuide_v1.0. Internal script, never shown to the client. Run once
           per interviewee, 35–45 minutes.
@@ -79,7 +79,7 @@ export default function QuestionsPage() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-2">Section B — Role &amp; daily tasks</p>
+            <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-2">Section B: Role &amp; daily tasks</p>
             <ul className="space-y-1.5">
               {ROLE_QUESTIONS.map((q, i) => (
                 <li key={i} className="text-sm text-neutral-800">
@@ -90,7 +90,7 @@ export default function QuestionsPage() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-2">Section C — Workflow inventory probes</p>
+            <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-2">Section C: Workflow inventory probes</p>
             <p className="text-sm text-neutral-700">
               &ldquo;Is there anything you do the same way every time?&rdquo; · &ldquo;What do you do when a new
               matter comes in?&rdquo; · &ldquo;Any end-of-week routines?&rdquo;
@@ -99,7 +99,7 @@ export default function QuestionsPage() {
 
           <div>
             <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-2">
-              Section D — Deep-dive (per top 2–3 workflows)
+              Section D: Deep-dive (per top 2–3 workflows)
             </p>
             <ul className="space-y-1.5">
               {DEEP_DIVE_QUESTIONS.map((q, i) => (
@@ -111,7 +111,7 @@ export default function QuestionsPage() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-1">Section E — Tool audit</p>
+            <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-1">Section E: Tool audit</p>
             <p className="text-sm text-neutral-700 italic">
               &ldquo;Are there any tools the firm pays for but rarely or never uses?&rdquo;
             </p>
@@ -119,7 +119,7 @@ export default function QuestionsPage() {
 
           <div>
             <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-1">
-              Section F — AI readiness (rate 1–5)
+              Section F: AI readiness (rate 1–5)
             </p>
             <p className="text-sm text-neutral-700">
               Comfort learning new tools · Confidence after a 20-minute training · Concern about AI accuracy ·
@@ -128,9 +128,9 @@ export default function QuestionsPage() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-1">Section G — Close</p>
+            <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-1">Section G: Close</p>
             <p className="text-sm text-neutral-700 italic mb-1">
-              &ldquo;To confirm — you spend approximately [X] hours per week on [WORKFLOW NAME]. Is that number
+              &ldquo;To confirm, you spend approximately [X] hours per week on [WORKFLOW NAME]. Is that number
               right, or should we adjust it?&rdquo;
             </p>
             <p className="text-sm text-neutral-700 italic">
@@ -143,7 +143,7 @@ export default function QuestionsPage() {
       </div>
 
       <p className="text-xs text-neutral-400">
-        Tip: after running this on a client, paste your notes into that client&apos;s Assessment Copilot — it will
+        Tip: after running this on a client, paste your notes into that client&apos;s Assessment Copilot. It will
         extract candidate workflows and draft scores automatically.
       </p>
     </div>

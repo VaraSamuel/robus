@@ -25,7 +25,7 @@ export function OverlayFields({
         <span className="block text-xs font-medium text-neutral-600 mb-1">Status (must be chosen explicitly)</span>
         <select name="status" required defaultValue={defaults?.status ?? ""} className={inputClass}>
           <option value="" disabled>
-            — choose one —
+            Choose one
           </option>
           <option value="FULL_PACK">Full pack</option>
           <option value="LIGHTWEIGHT">Lightweight</option>
@@ -33,23 +33,23 @@ export function OverlayFields({
         </select>
       </label>
       <label className="col-span-2">
-        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot A — size band</span>
+        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot A: size band</span>
         <input name="slotASizeBand" defaultValue={defaults?.slotASizeBand ?? ""} className={inputClass} />
       </label>
       <label className="col-span-2">
-        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot B — typical workflows</span>
+        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot B: typical workflows</span>
         <textarea name="slotBTypicalWorkflows" defaultValue={defaults?.slotBTypicalWorkflows ?? ""} rows={2} className={inputClass} />
       </label>
       <label className="col-span-2">
-        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot C — tool landscape</span>
+        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot C: tool landscape</span>
         <textarea name="slotCToolLandscape" defaultValue={defaults?.slotCToolLandscape ?? ""} rows={2} className={inputClass} />
       </label>
       <label className="col-span-2">
-        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot D — buying structure (never a fee)</span>
+        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot D: buying structure (never a fee)</span>
         <textarea name="slotDBuyingStructure" defaultValue={defaults?.slotDBuyingStructure ?? ""} rows={2} className={inputClass} />
       </label>
       <label className="col-span-2">
-        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot E — regulatory context</span>
+        <span className="block text-xs font-medium text-neutral-600 mb-1">Slot E: regulatory context</span>
         <textarea name="slotERegulatoryContext" defaultValue={defaults?.slotERegulatoryContext ?? ""} rows={2} className={inputClass} />
       </label>
       <label className="col-span-2">

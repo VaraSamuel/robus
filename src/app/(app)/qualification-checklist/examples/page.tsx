@@ -10,7 +10,7 @@ export default function QualificationExamplesPage() {
       <div className="mt-2 mb-8">
         <h1 className="text-2xl font-semibold text-neutral-900">Examples</h1>
         <p className="text-sm text-neutral-500 mt-1">
-          Two worked examples run on the same instrument — the comparison is the argument for the whole design.
+          Two worked examples run on the same instrument. The comparison is the argument for the whole design.
         </p>
       </div>
 
@@ -38,7 +38,7 @@ export default function QualificationExamplesPage() {
                 ))}
                 <tr className="bg-neutral-50">
                   <td colSpan={2} className="px-3 py-2 font-medium text-neutral-800">
-                    TOTALS — {ex.totals}
+                    TOTALS: {ex.totals}
                   </td>
                   <td className="px-3 py-2 text-right font-semibold text-neutral-900">{ex.totalScore}</td>
                 </tr>

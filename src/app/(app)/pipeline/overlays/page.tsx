@@ -18,7 +18,7 @@ export default async function OverlaysPage() {
       <div className="mt-2 mb-8">
         <h1 className="text-2xl font-semibold text-neutral-900">Vertical Overlays</h1>
         <p className="text-sm text-neutral-500 mt-1">
-          Industry-specific reference cards pulled in at qualification and discovery time — no client data, never
+          Industry-specific reference cards pulled in at qualification and discovery time. No client data, and never
           client-facing. No permitted-industry list: any vertical can be qualified; these are just the ones with
           depth today.
         </p>

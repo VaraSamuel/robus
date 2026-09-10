@@ -40,7 +40,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
           <PipelineStatusSelect clientId={client.id} status={client.pipelineStatus} />
           <DeleteButton
             action={deleteLead.bind(null, client.id)}
-            confirmMessage={`Delete "${client.name}" and everything on it — qualifications, discovery calls, check-ins, workflows, and assessment notes? This can't be undone.`}
+            confirmMessage={`Delete "${client.name}" and everything on it: qualifications, discovery calls, check-ins, workflows, and assessment notes? This can't be undone.`}
             redirectTo="/pipeline"
             className="px-3 py-2 rounded-lg bg-red-50 hover:bg-red-100"
           />

@@ -64,7 +64,7 @@ export default async function PipelinePage({
         <div>
           <h1 className="text-2xl font-semibold text-neutral-900">Pipeline</h1>
           <p className="text-sm text-neutral-500 mt-1">
-            Every lead from inbound to converted — qualification, discovery calls, and vertical overlays.
+            Every lead from inbound to converted: qualification, discovery calls, and vertical overlays.
           </p>
         </div>
         <Link

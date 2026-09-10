@@ -29,8 +29,8 @@ const GATE_BADGE: Record<string, string> = {
 };
 
 const GATE_LABEL: Record<string, string> = {
-  PASS: "PASS — Priority 1 confirmed",
-  DEMOTED: "Quality gate demoted — no confirmed tool",
+  PASS: "PASS: Priority 1 confirmed",
+  DEMOTED: "Quality gate demoted: no confirmed tool",
   PENDING: "Tool status not yet confirmed",
   NA: "Gate not applicable",
 };
@@ -74,7 +74,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
         <div className="divide-y divide-neutral-100">
           {sortedWorkflows.length === 0 && (
             <p className="px-5 py-6 text-sm text-neutral-400">
-              None yet — use the Assessment Copilot above to analyze interview notes.
+              None yet. Use the Assessment Copilot above to analyze interview notes.
             </p>
           )}
           {sortedWorkflows.map((w) => {

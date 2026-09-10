@@ -89,7 +89,7 @@ export function ScoringDetailsForm({ workflow }: { workflow: Workflow }) {
         <label>
           <span className="block text-xs font-medium text-neutral-600 mb-1">Revenue basis</span>
           <select name="revenueBasis" defaultValue={workflow.revenueBasis ?? ""} className={inputClass}>
-            <option value="">—</option>
+            <option value="">N/A</option>
             <option value="MEASURED">Measured</option>
             <option value="ESTIMATED">Estimated</option>
             <option value="UNMEASURED">Unmeasured</option>
@@ -105,7 +105,7 @@ export function ScoringDetailsForm({ workflow }: { workflow: Workflow }) {
             checked={creativeAdjacent}
             onChange={(e) => setCreativeAdjacent(e.target.checked)}
           />
-          Creative-adjacent — part of this stays manual
+          Creative-adjacent (part of this stays manual)
         </label>
         {creativeAdjacent && (
           <textarea

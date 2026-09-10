@@ -91,11 +91,11 @@ export function OverlayRow({ overlay, reviewStale, qualificationsCount }: { over
         </div>
       </summary>
       <div className="mt-3 space-y-2 text-sm text-neutral-700">
-        {overlay.slotASizeBand && <p><span className="font-medium">Slot A — size band:</span> {overlay.slotASizeBand}</p>}
-        {overlay.slotBTypicalWorkflows && <p><span className="font-medium">Slot B — typical workflows:</span> {overlay.slotBTypicalWorkflows}</p>}
-        {overlay.slotCToolLandscape && <p><span className="font-medium">Slot C — tool landscape:</span> {overlay.slotCToolLandscape}</p>}
-        {overlay.slotDBuyingStructure && <p><span className="font-medium">Slot D — buying structure:</span> {overlay.slotDBuyingStructure}</p>}
-        {overlay.slotERegulatoryContext && <p><span className="font-medium">Slot E — regulatory context:</span> {overlay.slotERegulatoryContext}</p>}
+        {overlay.slotASizeBand && <p><span className="font-medium">Slot A (size band):</span> {overlay.slotASizeBand}</p>}
+        {overlay.slotBTypicalWorkflows && <p><span className="font-medium">Slot B (typical workflows):</span> {overlay.slotBTypicalWorkflows}</p>}
+        {overlay.slotCToolLandscape && <p><span className="font-medium">Slot C (tool landscape):</span> {overlay.slotCToolLandscape}</p>}
+        {overlay.slotDBuyingStructure && <p><span className="font-medium">Slot D (buying structure):</span> {overlay.slotDBuyingStructure}</p>}
+        {overlay.slotERegulatoryContext && <p><span className="font-medium">Slot E (regulatory context):</span> {overlay.slotERegulatoryContext}</p>}
         {overlay.extraDisqualifiers && <p><span className="font-medium">Extra disqualifiers:</span> {overlay.extraDisqualifiers}</p>}
         {overlay.sourcePack && <p className="text-xs text-neutral-400">Source: {overlay.sourcePack}</p>}
         {overlay.lastReviewed && (

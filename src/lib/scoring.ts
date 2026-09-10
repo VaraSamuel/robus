@@ -24,9 +24,9 @@ export type FinalTierResult =
   | { tier: Exclude<IndicatedTier, "P1">; gateResult: "NA" };
 
 export const TIER_LABELS: Record<IndicatedTier, string> = {
-  P1: "Priority 1 — Act Now",
-  P2: "Priority 2 — Plan Next",
-  P3: "Priority 3 — Monitor",
+  P1: "Priority 1: Act Now",
+  P2: "Priority 2: Plan Next",
+  P3: "Priority 3: Monitor",
   NOT_RECOMMENDED: "Not Recommended",
 };
 

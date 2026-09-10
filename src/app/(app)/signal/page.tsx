@@ -68,15 +68,15 @@ export default async function SignalPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-neutral-900">Signal Engine</h1>
         <p className="text-sm text-neutral-500 mt-1">
-          Tracks demand signal across every client, by vertical — the first of Robus&apos;s six product-readiness gates.
+          Tracks demand signal across every client, by vertical. It&apos;s the first of Robus&apos;s six product-readiness gates.
         </p>
       </div>
 
       <div className="mb-6 bg-indigo-50 border border-indigo-100 rounded-2xl px-5 py-4 text-sm text-indigo-900">
         <strong>Gate 1 of 6 (demand signal):</strong> a capability is flagged as product-ready when ≥{Math.round(GATE_THRESHOLD * 100)}% of
-        <em> assessed</em> clients in a vertical (minimum sample of {MIN_SAMPLE} shown here — the real policy uses 10) report it at
+        <em> assessed</em> clients in a vertical (minimum sample of {MIN_SAMPLE} shown here; the real policy uses 10) report it at
         severity ≥ 3. Clients with no workflows on record yet aren&apos;t counted in the denominator, so adding a new,
-        not-yet-assessed client won&apos;t artificially move these percentages. Clearing this gate does not mean build —
+        not-yet-assessed client won&apos;t artificially move these percentages. Clearing this gate does not mean build:
         five more gates (market size, willingness-to-pay, build-cost payback, defensibility, delivery fit) still apply
         per Robus&apos;s Phase 2 framework.
       </div>
@@ -84,7 +84,7 @@ export default async function SignalPage() {
       <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm divide-y divide-neutral-100">
         {rows.length === 0 && (
           <p className="px-5 py-6 text-sm text-neutral-400">
-            No signal yet — add clients and run the Assessment Copilot to start building the picture.
+            No signal yet. Add clients and run the Assessment Copilot to start building the picture.
           </p>
         )}
         {rows.map((r) => (
@@ -109,7 +109,7 @@ export default async function SignalPage() {
             </div>
             {r.gateCleared && (
               <span className="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
-                Gate 1 cleared — ready for gates 2–6 review
+                Gate 1 cleared: ready for gates 2–6 review
               </span>
             )}
           </div>

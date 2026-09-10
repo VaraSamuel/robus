@@ -68,7 +68,7 @@ export function useSpeechToText(onFinalResult: (text: string) => void) {
         setIsRecording(false);
         setErrorMessage(
           event.error === "not-allowed" || event.error === "service-not-allowed"
-            ? "Microphone access was blocked — check your browser's site permissions."
+            ? "Microphone access was blocked. Check your browser's site permissions."
             : "No microphone was found."
         );
       }

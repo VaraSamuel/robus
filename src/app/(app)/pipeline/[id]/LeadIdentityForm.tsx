@@ -46,7 +46,7 @@ export function LeadIdentityForm({ clientId, client }: { clientId: string; clien
       <label>
         <span className="block text-xs font-medium text-neutral-600 mb-1">Source</span>
         <select name="source" defaultValue={client.source ?? ""} className={inputClass}>
-          <option value="">—</option>
+          <option value="">N/A</option>
           <option value="REFERRAL">Referral</option>
           <option value="CHAMBER_OR_ASSOCIATION">Chamber or association</option>
           <option value="LINKEDIN">LinkedIn</option>
@@ -63,7 +63,7 @@ export function LeadIdentityForm({ clientId, client }: { clientId: string; clien
       <label>
         <span className="block text-xs font-medium text-neutral-600 mb-1">Service line</span>
         <select name="serviceLine" defaultValue={client.serviceLine ?? ""} className={inputClass}>
-          <option value="">—</option>
+          <option value="">N/A</option>
           <option value="AI_READINESS_ASSESSMENT">AI Readiness Assessment</option>
           <option value="AUTOMATION_SPRINT">Automation Sprint</option>
           <option value="TOOL_SELECTION_ADVISORY">Tool Selection & Advisory</option>

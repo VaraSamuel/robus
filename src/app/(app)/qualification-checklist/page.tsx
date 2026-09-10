@@ -39,7 +39,7 @@ export default async function QualificationChecklistPage() {
         <div>
           <h1 className="text-2xl font-semibold text-neutral-900">Lead Qualification Checklist</h1>
           <p className="text-sm text-neutral-500 mt-1">
-            SOP 1, step 1 — the gate that runs on every inbound lead before a discovery call is scheduled. Ten to
+            SOP 1, step 1: the gate that runs on every inbound lead before a discovery call is scheduled. Ten to
             fifteen minutes, run by the Relationship Lead, on what&apos;s visible before speaking to anyone.
           </p>
         </div>
@@ -52,7 +52,7 @@ export default async function QualificationChecklistPage() {
       </div>
 
       <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5 mb-6">
-        <h2 className="text-sm font-semibold text-neutral-900 mb-2">Layer 1 — the universal checklist</h2>
+        <h2 className="text-sm font-semibold text-neutral-900 mb-2">Layer 1: the universal checklist</h2>
         <p className="text-sm text-neutral-700">
           Six sections, A through F. Every item is either a hard gate or a scored signal. Hard gates are pass/fail
           and a single failure ends qualification. Scored signals are graded 0, 1 or 2 and accumulate into a total
@@ -110,7 +110,7 @@ export default async function QualificationChecklistPage() {
               {items.map((item) => (
                 <div key={item.ref} className="border-t border-neutral-100 pt-3 first:border-t-0 first:pt-0">
                   <p className="text-sm text-neutral-800">
-                    <span className="font-medium">{item.ref} · {item.type}</span> — {item.question}
+                    <span className="font-medium">{item.ref} · {item.type}</span>: {item.question}
                   </p>
                   <p className="text-xs text-neutral-500 mt-1">{item.rubric}</p>
                 </div>
@@ -140,14 +140,14 @@ export default async function QualificationChecklistPage() {
           <span className="shrink-0 ml-4 text-neutral-400 text-xs font-normal hidden group-open:inline">Hide</span>
         </summary>
         <p className="text-xs text-neutral-500 mb-3 mt-3">
-          The consolidated list of conditions that end qualification regardless of anything above — the gates from
+          The consolidated list of conditions that end qualification regardless of anything above: the gates from
           Sections B through E gathered in one place, so a partner can scan them in thirty seconds before scoring
           anything.
         </p>
         <div className="space-y-2">
           {F_DISQUALIFIERS.map((f) => (
             <p key={f.ref} className="text-sm text-neutral-700">
-              <span className="font-medium text-neutral-900">{f.ref} — {f.name}</span> ({f.gate}). {f.meaning}{" "}
+              <span className="font-medium text-neutral-900">{f.ref}: {f.name}</span> ({f.gate}). {f.meaning}{" "}
               <span className="text-neutral-500">{f.whatToDo}</span>
             </p>
           ))}

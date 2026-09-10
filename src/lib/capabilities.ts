@@ -110,23 +110,23 @@ export function analyzeNotes(rawText: string): ExtractedWorkflow[] {
 // than a generic script every client gets word-for-word.
 const TAILORED_OPENER: Record<CapabilityTag, string> = {
   INTAKE_AUTOMATION:
-    "Walk me through what happens the moment a new inquiry comes in — where does it land, and who has to manually re-enter it somewhere else?",
+    "Walk me through what happens the moment a new inquiry comes in: where does it land, and who has to manually re-enter it somewhere else?",
   RESERVATION_NOSHOW_HANDLING:
-    "How often do no-shows or last-minute cancellations happen, and what do you currently do — if anything — to prevent them?",
+    "How often do no-shows or last-minute cancellations happen, and what do you currently do (if anything) to prevent them?",
   SALES_RECONCILIATION:
     "How do today's sales totals get from your point-of-sale into your books, and how much manual matching is involved?",
   MISSED_CALL_HANDLING:
-    "What actually happens when a call goes unanswered — does anyone follow up, and how quickly?",
+    "What actually happens when a call goes unanswered: does anyone follow up, and how quickly?",
   REBOOKING_FOLLOWUP:
     "How do you currently identify and reach out to clients who haven't come back in a while?",
   DOCUMENT_AUTOMATION:
     "Which documents do you draft most often, and how much of each one is copied from a previous file versus written fresh?",
   CASE_MATTER_TRACKING:
-    "How are matter/case deadlines tracked today — and what happens if the person who tracks them is out sick?",
+    "How are matter/case deadlines tracked today, and what happens if the person who tracks them is out sick?",
   CLIENT_REPORTING:
-    "Walk me through how a client or owner report gets built today, start to finish — where does the data come from?",
+    "Walk me through how a client or owner report gets built today, start to finish: where does the data come from?",
   LEASING_AGENT_AUTOMATION:
-    "What happens when a prospective tenant asks about a showing — who responds, and how fast?",
+    "What happens when a prospective tenant asks about a showing: who responds, and how fast?",
   BOOKKEEPING_CATEGORIZATION:
     "How are transactions categorized today, and how much of that is re-typed by hand instead of pulled automatically?",
   PROPOSAL_BID_ASSEMBLY:
@@ -144,9 +144,9 @@ export function tailoredDeepDiveQuestions(w: { capabilityTag: CapabilityTag; nam
   return [
     TAILORED_OPENER[w.capabilityTag],
     `Walk me through ${label.toLowerCase()} step by step, from trigger to completion. What starts it? What ends it?`,
-    `Where do mistakes happen with ${label.toLowerCase()}? What does a mistake cost you — in time and in consequence?`,
+    `Where do mistakes happen with ${label.toLowerCase()}? What does a mistake cost you, in time and in consequence?`,
     `Have you ever tried to improve ${label.toLowerCase()}? What happened?`,
     `Is there a tool that's supposed to handle ${label.toLowerCase()} but doesn't quite work?`,
-    `To confirm — you spend approximately [X] hours per week on ${label.toLowerCase()}. Is that number right, or should we adjust it?`,
+    `To confirm, you spend approximately [X] hours per week on ${label.toLowerCase()}. Is that number right, or should we adjust it?`,
   ];
 }

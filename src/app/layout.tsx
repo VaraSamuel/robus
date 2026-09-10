@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Robus Ops — Internal Delivery Tooling",
+  title: "Robus Ops: Internal Delivery Tooling",
   description: "Assessment copilot, delivery playbooks, and signal engine for Robus Works AI.",
 };
 

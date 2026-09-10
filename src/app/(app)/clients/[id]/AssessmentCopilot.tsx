@@ -62,14 +62,14 @@ export function AssessmentCopilot({
       </div>
       <p className="text-xs text-neutral-500 mb-4">
         Paste raw interview notes from the Assessment, or record them live. The copilot flags candidate workflows
-        and drafts scores — review and add the ones that are real before they become part of the record.
+        and drafts scores. Review and add the ones that are real before they become part of the record.
       </p>
 
       <textarea
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         rows={6}
-        placeholder="e.g. The front desk gets constantly interrupted by missed calls during busy hours. Reservations and no-shows are tracked in a spreadsheet — deposits aren't collected consistently, so no-shows are a real revenue leak. Daily sales reconciliation between the POS and QuickBooks is manual and takes about an hour every night..."
+        placeholder="e.g. The front desk gets constantly interrupted by missed calls during busy hours. Reservations and no-shows are tracked in a spreadsheet. Deposits aren't collected consistently, so no-shows are a real revenue leak. Daily sales reconciliation between the POS and QuickBooks is manual and takes about an hour every night..."
         className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-300"
       />
       {isRecording && (
@@ -79,7 +79,7 @@ export function AssessmentCopilot({
       )}
       {!isSupported && (
         <p className="text-xs text-neutral-400 mt-1.5">
-          Voice input isn&apos;t supported in this browser — try Chrome or Edge.
+          Voice input isn&apos;t supported in this browser. Try Chrome or Edge.
         </p>
       )}
       {errorMessage && <p className="text-xs text-red-600 mt-1.5">{errorMessage}</p>}
@@ -119,9 +119,9 @@ export function AssessmentCopilot({
                           {tier === "P1" && (
                             <span
                               className="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-700"
-                              title="Composite indicates Priority 1, but the quality gate needs a confirmed compliant tool before it's final — answer that once it's added as a workflow."
+                              title="Composite indicates Priority 1, but the quality gate needs a confirmed compliant tool before it's final. Answer that once it's added as a workflow."
                             >
-                              Would be Priority 1 — tool not confirmed yet
+                              Would be Priority 1 (tool not confirmed yet)
                             </span>
                           )}
                           {isExisting && (
@@ -151,7 +151,7 @@ export function AssessmentCopilot({
 
                     <details className="mt-3">
                       <summary className="cursor-pointer text-xs font-medium text-indigo-600 hover:text-indigo-700">
-                        Ask about this next — {CAPABILITY_LABELS[c.capabilityTag]}
+                        Ask about this next: {CAPABILITY_LABELS[c.capabilityTag]}
                       </summary>
                       <ol className="mt-2 space-y-1.5 list-decimal list-inside">
                         {tailoredDeepDiveQuestions(c).map((q, i) => (

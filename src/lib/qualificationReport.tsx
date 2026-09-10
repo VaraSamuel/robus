@@ -82,11 +82,11 @@ function findingFor(item: ChecklistItem, data: QualificationReportData): string 
 function scoreFor(item: ChecklistItem, data: QualificationReportData, gateKey?: string): string {
   if (item.type === "GATE") {
     const v = gateKey ? data.gates[gateKey] : null;
-    return v === "PASS" ? "PASS" : v === "FAIL" ? "FAIL" : "—";
+    return v === "PASS" ? "PASS" : v === "FAIL" ? "FAIL" : "N/A";
   }
-  if (item.type === "FLAG") return "—";
+  if (item.type === "FLAG") return "N/A";
   const v = data.itemScores[item.ref];
-  return v === undefined ? "—" : String(v);
+  return v === undefined ? "N/A" : String(v);
 }
 
 function SectionTable({
@@ -107,7 +107,7 @@ function SectionTable({
   return (
     <View wrap={false}>
       <Text style={styles.sectionTitle}>
-        {letter} · {meta.title} — {score}/{max}
+        {letter} · {meta.title}: {score}/{max}
       </Text>
       <Text style={styles.sectionDesc}>{meta.description}</Text>
       <View style={styles.table}>
@@ -144,7 +144,7 @@ export function QualificationReportDocument({ data }: { data: QualificationRepor
   const colors = OUTCOME_COLOR[outcome];
 
   return (
-    <Document title={`${data.prospectName} — Lead Qualification Checklist`}>
+    <Document title={`${data.prospectName}: Lead Qualification Checklist`}>
       <Page size="LETTER" style={styles.page}>
         <Text style={styles.title}>{data.prospectName}</Text>
         <Text style={styles.subtitle}>
@@ -180,13 +180,13 @@ export function QualificationReportDocument({ data }: { data: QualificationRepor
 
         <View style={[styles.outcomeBox, { backgroundColor: colors.bg }]} wrap={false}>
           <Text style={[styles.outcomeTitle, { color: colors.fg }]}>
-            OUTCOME — {QUALIFICATION_OUTCOME_LABELS[outcome]}
+            OUTCOME: {QUALIFICATION_OUTCOME_LABELS[outcome]}
           </Text>
           <Text style={[styles.outcomeText, { color: colors.fg }]}>
-            Total {total} of 30. Workflow floor (Section B + C) {floor} of 14 — {floor >= 8 ? "cleared" : "not cleared"}.{" "}
-            {data.overrideApplied && "Buying-readiness override applied — forces Nurture regardless of total. "}
+            Total {total} of 30. Workflow floor (Section B + C) {floor} of 14: {floor >= 8 ? "cleared" : "not cleared"}.{" "}
+            {data.overrideApplied && "Buying-readiness override applied, forcing Nurture regardless of total. "}
             {depth === "MISSING - universal criteria only"
-              ? "No vertical overlay was applied — A2 and C2 were scored conservatively and this qualification runs on universal criteria only."
+              ? "No vertical overlay was applied. A2 and C2 were scored conservatively and this qualification runs on universal criteria only."
               : "A vertical overlay was applied for this qualification."}
           </Text>
           {outcome === "NURTURE" && data.followUpDate && (
@@ -203,7 +203,7 @@ export function QualificationReportDocument({ data }: { data: QualificationRepor
         </View>
 
         <Text style={styles.footer}>
-          Robus Works AI LLC · Lead Qualification Checklist · Generated {new Date().toLocaleDateString("en-US", { timeZone: "UTC" })} · Internal — Confidential
+          Robus Works AI LLC · Lead Qualification Checklist · Generated {new Date().toLocaleDateString("en-US", { timeZone: "UTC" })} · Internal · Confidential
         </Text>
       </Page>
     </Document>

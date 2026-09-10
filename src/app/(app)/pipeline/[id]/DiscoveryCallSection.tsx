@@ -56,7 +56,7 @@ export function DiscoveryCallSection({
   const [adding, setAdding] = useState(false);
 
   if (qualifications.length === 0) {
-    return <p className="text-xs text-neutral-400">Run a qualification first — a discovery call needs one to attach to.</p>;
+    return <p className="text-xs text-neutral-400">Run a qualification first. A discovery call needs one to attach to.</p>;
   }
 
   return (
@@ -178,7 +178,7 @@ function DiscoveryCallForm({
           <select name="leadQualificationId" defaultValue={existing?.leadQualificationId ?? qualifications[0]?.id} required className={inputClass}>
             {qualifications.map((q) => (
               <option key={q.id} value={q.id}>
-                {q.prospectName} — {formatDate(q.dateRun)}
+                {q.prospectName} ({formatDate(q.dateRun)})
               </option>
             ))}
           </select>
@@ -217,9 +217,9 @@ function DiscoveryCallForm({
         <label>
           <span className="block text-xs font-medium text-neutral-600 mb-1">Recorded</span>
           <select name="recorded" defaultValue={existing?.recorded ?? "NO_DECLINED"} className={inputClass}>
-            <option value="YES_CONSENT_LOGGED">Yes — consent logged</option>
-            <option value="NO_DECLINED">No — declined</option>
-            <option value="NO_REGIME_FLAG">No — regime flag</option>
+            <option value="YES_CONSENT_LOGGED">Yes, consent logged</option>
+            <option value="NO_DECLINED">No, declined</option>
+            <option value="NO_REGIME_FLAG">No, regime flag</option>
           </select>
         </label>
         <label className="flex items-center gap-1.5 text-xs text-neutral-700 pt-5">
@@ -229,7 +229,7 @@ function DiscoveryCallForm({
         <label>
           <span className="block text-xs font-medium text-neutral-600 mb-1">Budget signal</span>
           <select name="budgetSignal" defaultValue={existing?.budgetSignal ?? ""} className={inputClass}>
-            <option value="">—</option>
+            <option value="">N/A</option>
             <option value="BUYS_OUTSIDE_SERVICES">Buys outside services</option>
             <option value="SOFTWARE_SPEND_ONLY">Software spend only</option>
             <option value="NOT_OBTAINED">Not obtained</option>
@@ -238,7 +238,7 @@ function DiscoveryCallForm({
       </div>
 
       <label className="block">
-        <span className="block text-xs font-medium text-neutral-600 mb-1">Trigger (why now — leave blank if none identified)</span>
+        <span className="block text-xs font-medium text-neutral-600 mb-1">Trigger (why now, leave blank if none identified)</span>
         <input name="trigger" defaultValue={existing?.trigger ?? ""} className={inputClass} />
       </label>
 

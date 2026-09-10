@@ -253,8 +253,8 @@ function CondensedReport({
                             ? "PASS"
                             : gates[gateKey] === "FAIL"
                               ? "FAIL"
-                              : "—"
-                          : (q.itemScores[item.ref] ?? "—");
+                              : "N/A"
+                          : (q.itemScores[item.ref] ?? "N/A");
                       return (
                         <tr key={item.ref}>
                           <td className="px-2 py-1.5 align-top font-medium text-neutral-800 whitespace-nowrap">{item.ref}</td>
@@ -294,7 +294,7 @@ function CondensedReport({
                   <td className="px-2 py-1.5 align-top font-medium text-neutral-800 w-10">F4</td>
                   <td className="px-2 py-1.5 align-top text-neutral-600">{q.itemNotes.F4 || "No notes recorded."}</td>
                   <td className="px-2 py-1.5 align-top text-right font-medium text-neutral-900 w-14">
-                    {gates.gateF4 === "PASS" ? "PASS" : gates.gateF4 === "FAIL" ? "FAIL" : "—"}
+                    {gates.gateF4 === "PASS" ? "PASS" : gates.gateF4 === "FAIL" ? "FAIL" : "N/A"}
                   </td>
                 </tr>
               </tbody>
@@ -303,9 +303,9 @@ function CondensedReport({
         </div>
 
         <div className={`rounded-lg border px-3 py-2 ${tone.bg}`}>
-          <p className={`text-xs font-semibold ${tone.text}`}>OUTCOME — {QUALIFICATION_OUTCOME_LABELS[outcome]}</p>
+          <p className={`text-xs font-semibold ${tone.text}`}>OUTCOME: {QUALIFICATION_OUTCOME_LABELS[outcome]}</p>
           <p className={`text-xs mt-1 ${tone.text}`}>
-            Total {total} of 30. Workflow floor {floor} of 14 — {floor >= 8 ? "cleared" : "not cleared"}.
+            Total {total} of 30. Workflow floor {floor} of 14: {floor >= 8 ? "cleared" : "not cleared"}.
             {q.overrideApplied && " Buying-readiness override applied."}
           </p>
         </div>
@@ -367,7 +367,7 @@ function QualificationForm({
             else await addQualification(clientId, formData);
             onDone();
           } catch {
-            setError("Could not save — check the required fields above.");
+            setError("Could not save. Check the required fields above.");
           }
         });
       }}
@@ -383,7 +383,7 @@ function QualificationForm({
           <span className="text-neutral-400">{depth}</span>
         </div>
         {!verticalOverlayId && (
-          <span className="text-xs text-amber-700">No overlay — score A2 and C2 conservatively (max 1), never above 1 on C2.</span>
+          <span className="text-xs text-amber-700">No overlay. Score A2 and C2 conservatively (max 1), never above 1 on C2.</span>
         )}
       </div>
 
@@ -412,7 +412,7 @@ function QualificationForm({
 
       <ChecklistSection
         letter="A"
-        title="Firm fit — is this a business the partner can serve at all? Nothing here is a gate."
+        title="Firm fit: is this a business the partner can serve at all? Nothing here is a gate."
         items={SECTION_A}
         max={8}
         itemScores={itemScores}
@@ -424,7 +424,7 @@ function QualificationForm({
       />
       <ChecklistSection
         letter="B"
-        title="Workflow fit — the real qualifier. B1 is the primary gate of the whole checklist."
+        title="Workflow fit: the real qualifier. B1 is the primary gate of the whole checklist."
         items={SECTION_B}
         max={8}
         itemScores={itemScores}
@@ -436,7 +436,7 @@ function QualificationForm({
       />
       <ChecklistSection
         letter="C"
-        title="AI-addressability — is at least one workflow something a tool available today could plausibly address?"
+        title="AI-addressability: is at least one workflow something a tool available today could plausibly address?"
         items={SECTION_C}
         max={6}
         itemScores={itemScores}
@@ -448,7 +448,7 @@ function QualificationForm({
       />
       <ChecklistSection
         letter="D"
-        title="Buying readiness — can this actually close?"
+        title="Buying readiness: can this actually close?"
         items={SECTION_D}
         max={6}
         itemScores={itemScores}
@@ -460,7 +460,7 @@ function QualificationForm({
       />
       <ChecklistSection
         letter="E"
-        title="Data and compliance context — surfaced now so it isn't discovered halfway through a Sprint."
+        title="Data and compliance context: surfaced now so it isn't discovered halfway through a Sprint."
         items={SECTION_E}
         max={2}
         itemScores={itemScores}
@@ -483,11 +483,11 @@ function QualificationForm({
       </details>
 
       <details className="border border-neutral-200 rounded-lg px-3 py-2">
-        <summary className="cursor-pointer text-xs font-medium text-neutral-700">F1–F6 — hard disqualifiers, thirty-second scan</summary>
+        <summary className="cursor-pointer text-xs font-medium text-neutral-700">F1–F6: hard disqualifiers, thirty-second scan</summary>
         <div className="mt-2 space-y-1.5">
           {F_DISQUALIFIERS.map((f) => (
             <p key={f.ref} className="text-xs text-neutral-600">
-              <span className="font-medium text-neutral-800">{f.ref} — {f.name}</span> ({f.gate}). {f.meaning}
+              <span className="font-medium text-neutral-800">{f.ref}: {f.name}</span> ({f.gate}). {f.meaning}
             </p>
           ))}
         </div>
@@ -502,7 +502,7 @@ function QualificationForm({
             onChange={(e) => setVerticalOverlayId(e.target.value)}
             className={inputClass}
           >
-            <option value="">— none (missing-depth flag) —</option>
+            <option value="">None (missing-depth flag)</option>
             {overlays.map((o) => (
               <option key={o.id} value={o.id}>
                 {o.vertical} ({o.status})
@@ -517,14 +517,14 @@ function QualificationForm({
             checked={overrideApplied}
             onChange={(e) => setOverrideApplied(e.target.checked)}
           />
-          Buying-readiness override — D2 and D3 both zero forces Nurture regardless of total
+          Buying-readiness override: D2 and D3 both zero forces Nurture regardless of total
         </label>
       </div>
 
       <div className="grid grid-cols-3 gap-2">
         <label>
           <span className="block text-xs font-medium text-neutral-600 mb-1">
-            Follow-up date {liveOutcome === "NURTURE" && <span className="text-red-600">(required — 60–90 days on a near miss, 6 months on a low score)</span>}
+            Follow-up date {liveOutcome === "NURTURE" && <span className="text-red-600">(required: 60–90 days on a near miss, 6 months on a low score)</span>}
           </span>
           <input
             type="date"
@@ -536,7 +536,7 @@ function QualificationForm({
         </label>
         <label>
           <span className="block text-xs font-medium text-neutral-600 mb-1">
-            Decline reason {liveOutcome === "NOT_QUALIFIED" && <span className="text-red-600">(required — name the gate that failed)</span>}
+            Decline reason {liveOutcome === "NOT_QUALIFIED" && <span className="text-red-600">(required: name the gate that failed)</span>}
           </span>
           <input
             name="declineReason"
@@ -600,12 +600,12 @@ function GateRow({
           onChange={(e) => onGateChange(e.target.value === "" ? null : (e.target.value as GateStatus))}
           className="text-xs rounded-md border border-neutral-300 px-1.5 py-1 shrink-0"
         >
-          <option value="">— unresolved —</option>
+          <option value="">Unresolved</option>
           <option value="PASS">Pass</option>
           <option value="FAIL">Fail</option>
         </select>
         <span className="text-xs text-neutral-700">
-          <span className="font-medium">{item.ref} · GATE</span> — {item.question}
+          <span className="font-medium">{item.ref} · GATE</span>: {item.question}
           <br />
           <span className="text-neutral-500">{item.rubric}</span>
         </span>
@@ -657,7 +657,7 @@ function ChecklistSection({
   return (
     <details className="border border-neutral-200 rounded-lg px-3 py-2" open>
       <summary className="cursor-pointer text-xs font-medium text-neutral-800">
-        {letter} · {title} — Section subtotal {score}/{max}
+        {letter} · {title}: Section subtotal {score}/{max}
       </summary>
       <div className="mt-2 space-y-2">
         {items.map((item) => {
@@ -678,7 +678,7 @@ function ChecklistSection({
             return (
               <div key={item.ref} className="space-y-1 bg-sky-50/50 border border-sky-100 rounded-md px-2 py-1.5">
                 <span className="text-xs text-neutral-700">
-                  <span className="font-medium">{item.ref} · FLAG</span> — {item.question}
+                  <span className="font-medium">{item.ref} · FLAG</span>: {item.question}
                   <br />
                   <span className="text-neutral-500">{item.rubric}</span>
                 </span>
@@ -702,13 +702,13 @@ function ChecklistSection({
                   onChange={(e) => onScoreChange(item.ref, Number(e.target.value))}
                   className="text-xs rounded-md border border-neutral-300 px-1.5 py-1 shrink-0 w-14"
                 >
-                  <option value="">—</option>
+                  <option value="">N/A</option>
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                 </select>
                 <span className="text-xs text-neutral-700">
-                  <span className="font-medium">{item.ref} · SIGNAL</span> — {item.question}
+                  <span className="font-medium">{item.ref} · SIGNAL</span>: {item.question}
                   <br />
                   <span className="text-neutral-500">{item.rubric}</span>
                 </span>

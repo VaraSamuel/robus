@@ -43,12 +43,12 @@ export default async function MonitorPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-neutral-900">Monitor</h1>
         <p className="text-sm text-neutral-500 mt-1">
-          A read-only overview of all three Robus Works AI databases — ops, workspace, and site. Same login as
+          A read-only overview of all three Robus Works AI databases: ops, workspace, and site. Same login as
           everything else here; there is no separate access list.
         </p>
       </div>
 
-      <Section title="Robus Ops — this database">
+      <Section title="Robus Ops (this database)">
         <div className="grid grid-cols-3 gap-4 mb-5">
           <Stat label="Total leads / clients" value={clientCount} />
           <Stat label="Delivery workflows tracked" value={workflowCount} />
@@ -119,7 +119,7 @@ function Stat({ label, value, warn }: { label: string; value: number; warn?: boo
 function NotConfigured({ envVar }: { envVar: string }) {
   return (
     <p className="text-xs text-neutral-400">
-      Not connected — set <code className="bg-neutral-100 px-1 py-0.5 rounded">{envVar}</code> on this service to show
+      Not connected. Set <code className="bg-neutral-100 px-1 py-0.5 rounded">{envVar}</code> on this service to show
       these numbers.
     </p>
   );
