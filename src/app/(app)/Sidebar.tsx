@@ -18,6 +18,7 @@ const NAV = [
   { href: "/signal", label: "Signal Engine" },
   { href: "/playbooks", label: "Playbooks" },
   { href: "/questions", label: "Discovery Questions" },
+  { href: "/monitor", label: "Monitor" },
 ];
 
 function isActive(pathname: string, href: string) {

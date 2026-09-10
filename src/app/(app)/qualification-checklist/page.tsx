@@ -65,9 +65,13 @@ export default async function QualificationChecklistPage() {
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5 mb-6">
-        <h2 className="text-sm font-semibold text-neutral-900 mb-3">How to score</h2>
-        <div className="space-y-3">
+      <details className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5 mb-6 group">
+        <summary className="text-sm font-semibold text-neutral-900 cursor-pointer list-none flex items-center justify-between">
+          How to score
+          <span className="text-neutral-400 text-xs font-normal group-open:hidden">Show</span>
+          <span className="text-neutral-400 text-xs font-normal hidden group-open:inline">Hide</span>
+        </summary>
+        <div className="space-y-3 mt-3">
           {HOW_TO_SCORE.map((h) => (
             <div key={h.type} className="text-sm">
               <p className="font-medium text-neutral-900">
@@ -78,7 +82,7 @@ export default async function QualificationChecklistPage() {
             </div>
           ))}
         </div>
-      </div>
+      </details>
 
       {(
         [
@@ -91,12 +95,18 @@ export default async function QualificationChecklistPage() {
       ).map(([letter, items]) => {
         const meta = SECTION_META[letter];
         return (
-          <div key={letter} className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5 mb-6">
-            <h2 className="text-sm font-semibold text-neutral-900">
-              {letter} · {meta.title}
-            </h2>
-            <p className="text-xs text-neutral-500 mt-1 mb-4">{meta.description}</p>
-            <div className="space-y-3">
+          <details key={letter} className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5 mb-6 group">
+            <summary className="cursor-pointer list-none flex items-center justify-between">
+              <span>
+                <span className="text-sm font-semibold text-neutral-900">
+                  {letter} · {meta.title}
+                </span>
+                <span className="block text-xs text-neutral-500 mt-0.5">{meta.description}</span>
+              </span>
+              <span className="shrink-0 ml-4 text-neutral-400 text-xs font-normal group-open:hidden">Show</span>
+              <span className="shrink-0 ml-4 text-neutral-400 text-xs font-normal hidden group-open:inline">Hide</span>
+            </summary>
+            <div className="space-y-3 mt-4">
               {items.map((item) => (
                 <div key={item.ref} className="border-t border-neutral-100 pt-3 first:border-t-0 first:pt-0">
                   <p className="text-sm text-neutral-800">
@@ -110,18 +120,26 @@ export default async function QualificationChecklistPage() {
               <p className="text-xs font-semibold text-sky-900">{meta.overlaySlot}</p>
               <p className="text-xs text-sky-800 mt-1">{meta.overlayNote}</p>
             </div>
-          </div>
+          </details>
         );
       })}
 
-      <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5 mb-6">
-        <h2 className="text-sm font-semibold text-neutral-900">F4 · {F4_GATE.question}</h2>
-        <p className="text-xs text-neutral-500 mt-1">{F4_GATE.rubric}</p>
-      </div>
+      <details className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5 mb-6 group">
+        <summary className="cursor-pointer list-none flex items-center justify-between">
+          <span className="text-sm font-semibold text-neutral-900">F4 · {F4_GATE.question}</span>
+          <span className="shrink-0 ml-4 text-neutral-400 text-xs font-normal group-open:hidden">Show</span>
+          <span className="shrink-0 ml-4 text-neutral-400 text-xs font-normal hidden group-open:inline">Hide</span>
+        </summary>
+        <p className="text-xs text-neutral-500 mt-3">{F4_GATE.rubric}</p>
+      </details>
 
-      <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5 mb-6">
-        <h2 className="text-sm font-semibold text-neutral-900 mb-1">F · Hard disqualifiers</h2>
-        <p className="text-xs text-neutral-500 mb-3">
+      <details className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5 mb-6 group">
+        <summary className="cursor-pointer list-none flex items-center justify-between">
+          <span className="text-sm font-semibold text-neutral-900">F · Hard disqualifiers</span>
+          <span className="shrink-0 ml-4 text-neutral-400 text-xs font-normal group-open:hidden">Show</span>
+          <span className="shrink-0 ml-4 text-neutral-400 text-xs font-normal hidden group-open:inline">Hide</span>
+        </summary>
+        <p className="text-xs text-neutral-500 mb-3 mt-3">
           The consolidated list of conditions that end qualification regardless of anything above — the gates from
           Sections B through E gathered in one place, so a partner can scan them in thirty seconds before scoring
           anything.
@@ -134,7 +152,7 @@ export default async function QualificationChecklistPage() {
             </p>
           ))}
         </div>
-      </div>
+      </details>
 
       <div className="bg-white rounded-2xl border border-neutral-100 shadow-sm p-5">
         <h2 className="text-sm font-semibold text-neutral-900 mb-3">Every qualification run so far</h2>
