@@ -10,11 +10,19 @@ type Client = {
   source: string | null;
   referredBy: string | null;
   relationshipLead: string | null;
+  relationshipLeadNote: string | null;
   buildLead: string | null;
   serviceLine: string | null;
 };
 
 const inputClass = "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm";
+
+const SALES_REP_LABELS: Record<string, string> = {
+  KEVIN: "Kevin",
+  ZACH: "Zach",
+  SAMUEL: "Samuel",
+  DAVE: "Dave",
+};
 
 export function LeadIdentityForm({ clientId, client }: { clientId: string; client: Client }) {
   const [isPending, startTransition] = useTransition();
@@ -73,7 +81,21 @@ export function LeadIdentityForm({ clientId, client }: { clientId: string; clien
       </label>
       <label>
         <span className="block text-xs font-medium text-neutral-600 mb-1">Relationship Lead</span>
-        <input name="relationshipLead" defaultValue={client.relationshipLead ?? ""} className={inputClass} />
+        <select name="relationshipLead" defaultValue={client.relationshipLead ?? ""} className={inputClass}>
+          <option value="">Unassigned</option>
+          {Object.entries(SALES_REP_LABELS).map(([value, label]) => (
+            <option key={value} value={value}>{label}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        <span className="block text-xs font-medium text-neutral-600 mb-1">Relationship note (optional)</span>
+        <input
+          name="relationshipLeadNote"
+          defaultValue={client.relationshipLeadNote ?? ""}
+          placeholder="e.g. joint with Dave, handed off from Kevin"
+          className={inputClass}
+        />
       </label>
       <label>
         <span className="block text-xs font-medium text-neutral-600 mb-1">Build Lead (internal)</span>

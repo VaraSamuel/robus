@@ -15,6 +15,13 @@ const STATUS_LABELS: Record<string, string> = {
   DECLINED: "Declined",
 };
 
+const SALES_REP_LABELS: Record<string, string> = {
+  KEVIN: "Kevin",
+  ZACH: "Zach",
+  SAMUEL: "Samuel",
+  DAVE: "Dave",
+};
+
 const STATUS_STYLES: Record<string, string> = {
   INBOUND: "bg-neutral-100 text-neutral-600",
   QUALIFIED: "bg-emerald-50 text-emerald-700",
@@ -100,6 +107,14 @@ export default async function PipelinePage({
             <option value="OTHER">Other</option>
           </select>
           <input name="referredBy" placeholder="Referred by (if applicable)" className="rounded-lg border border-neutral-200 px-3 py-2 text-sm" />
+          <select name="relationshipLead" required defaultValue="" className="rounded-lg border border-neutral-200 px-3 py-2 text-sm">
+            <option value="" disabled>
+              Relationship lead…
+            </option>
+            {Object.entries(SALES_REP_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
           <button
             type="submit"
             className="sm:col-span-2 rounded-lg bg-indigo-600 text-white text-sm font-medium py-2 hover:bg-indigo-700 transition"
@@ -143,9 +158,16 @@ export default async function PipelinePage({
                 {l._count.discoveryCalls > 0 && ` · ${l._count.discoveryCalls} discovery call${l._count.discoveryCalls !== 1 ? "s" : ""}`}
               </p>
             </div>
-            <span className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_STYLES[l.pipelineStatus]}`}>
-              {STATUS_LABELS[l.pipelineStatus]}
-            </span>
+            <div className="flex items-center gap-2 shrink-0">
+              {l.relationshipLead && (
+                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
+                  {SALES_REP_LABELS[l.relationshipLead]}
+                </span>
+              )}
+              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_STYLES[l.pipelineStatus]}`}>
+                {STATUS_LABELS[l.pipelineStatus]}
+              </span>
+            </div>
           </Link>
         ))}
       </div>

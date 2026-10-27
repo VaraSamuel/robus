@@ -12,6 +12,13 @@ import { DeleteButton } from "@/components/DeleteButton";
 import { deleteLead } from "@/lib/pipelineActions";
 import { formatDate, formatNumber } from "@/lib/formatDate";
 
+const SALES_REP_LABELS: Record<string, string> = {
+  KEVIN: "Kevin",
+  ZACH: "Zach",
+  SAMUEL: "Samuel",
+  DAVE: "Dave",
+};
+
 export default async function LeadDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const client = await prisma.robusClient.findUnique({
@@ -34,7 +41,14 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
       <div className="mt-2 mb-8 flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-neutral-900">{client.name}</h1>
-          <p className="text-sm text-neutral-500 mt-1">{VERTICAL_LABELS[client.vertical]}</p>
+          <p className="text-sm text-neutral-500 mt-1 flex items-center gap-2">
+            {VERTICAL_LABELS[client.vertical]}
+            {client.relationshipLead && (
+              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
+                {SALES_REP_LABELS[client.relationshipLead]}
+              </span>
+            )}
+          </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <PipelineStatusSelect clientId={client.id} status={client.pipelineStatus} />
@@ -57,6 +71,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             source: client.source,
             referredBy: client.referredBy,
             relationshipLead: client.relationshipLead,
+            relationshipLeadNote: client.relationshipLeadNote,
             buildLead: client.buildLead,
             serviceLine: client.serviceLine,
           }}

@@ -168,6 +168,16 @@ model User {
   role         Role   @default(PARTNER)
 }
 
+// Which salesperson owns a lead's relationship — set at creation and shown
+// on every pipeline row, so two reps never end up working the same lead
+// without realizing it.
+enum SalesRep {
+  KEVIN
+  ZACH
+  SAMUEL
+  DAVE
+}
+
 model RobusClient {
   id        String          @id @default(cuid())
   name      String
@@ -183,8 +193,9 @@ model RobusClient {
   parentClient        RobusClient?   @relation("ClientOpportunities", fields: [parentClientId], references: [id])
   opportunities       RobusClient[]  @relation("ClientOpportunities")
   pipelineStatus      PipelineStatus @default(INBOUND)
-  relationshipLead    String?
-  buildLead           String? // internal-only, written at Converted
+  relationshipLead     SalesRep? // the rep who owns this lead/client relationship
+  relationshipLeadNote String? // free-text overflow — joint ownership, handoffs, anything the enum can't capture
+  buildLead            String? // internal-only, written at Converted
   serviceLine         ServiceLine?
   deliveryStage       DeliveryStage?
   source              LeadSource     @default(OTHER)

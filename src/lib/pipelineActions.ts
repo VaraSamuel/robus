@@ -29,6 +29,7 @@ const PIPELINE_STATUSES = [
   "DECLINED",
 ] as const;
 const OVERLAY_STATUSES = ["FULL_PACK", "LIGHTWEIGHT", "DRAFT"] as const;
+const SALES_REPS = ["KEVIN", "ZACH", "SAMUEL", "DAVE"] as const;
 const CHECKIN_TYPES = [
   "POST_ASSESSMENT_30_DAY",
   "POST_SPRINT_30_DAY",
@@ -46,6 +47,7 @@ const createLeadSchema = z.object({
   vertical: z.enum(VERTICALS),
   source: z.enum(LEAD_SOURCES),
   referredBy: z.string().optional(),
+  relationshipLead: z.enum(SALES_REPS),
 });
 
 export async function createLead(formData: FormData) {
@@ -55,6 +57,7 @@ export async function createLead(formData: FormData) {
     vertical: formData.get("vertical"),
     source: formData.get("source"),
     referredBy: formData.get("referredBy") || undefined,
+    relationshipLead: formData.get("relationshipLead"),
   });
   const client = await prisma.robusClient.create({
     data: {
@@ -62,6 +65,7 @@ export async function createLead(formData: FormData) {
       vertical: parsed.vertical,
       source: parsed.source,
       referredBy: parsed.referredBy || null,
+      relationshipLead: parsed.relationshipLead,
       pipelineStatus: "INBOUND",
       statusChangedAt: new Date(),
     },
@@ -85,7 +89,8 @@ const updateLeadIdentitySchema = z.object({
   source: z.enum(LEAD_SOURCES).optional(),
   referredBy: z.string().optional(),
   serviceLine: z.enum(SERVICE_LINES).optional(),
-  relationshipLead: z.string().optional(),
+  relationshipLead: z.enum(SALES_REPS).optional(),
+  relationshipLeadNote: z.string().optional(),
   buildLead: z.string().optional(),
 });
 
@@ -99,6 +104,7 @@ export async function updateLeadIdentity(clientId: string, formData: FormData) {
     referredBy: formData.get("referredBy") || undefined,
     serviceLine: formData.get("serviceLine") || undefined,
     relationshipLead: formData.get("relationshipLead") || undefined,
+    relationshipLeadNote: formData.get("relationshipLeadNote") || undefined,
     buildLead: formData.get("buildLead") || undefined,
   });
   await prisma.robusClient.update({
@@ -110,11 +116,13 @@ export async function updateLeadIdentity(clientId: string, formData: FormData) {
       source: parsed.source,
       referredBy: parsed.referredBy || null,
       serviceLine: parsed.serviceLine ?? null,
-      relationshipLead: parsed.relationshipLead || null,
+      relationshipLead: parsed.relationshipLead ?? null,
+      relationshipLeadNote: parsed.relationshipLeadNote || null,
       buildLead: parsed.buildLead || null,
     },
   });
   revalidatePath(`/pipeline/${clientId}`);
+  revalidatePath("/pipeline");
 }
 
 export async function updatePipelineStatus(clientId: string, status: (typeof PIPELINE_STATUSES)[number]) {
